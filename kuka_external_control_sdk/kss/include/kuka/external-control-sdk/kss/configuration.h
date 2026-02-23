@@ -113,7 +113,7 @@ struct Configuration {
   ControlMode initial_control_mode = ControlMode::UNSPECIFIED;
 
   // This value is ignored if plain RSI is used
-  CycleTime cycle_time = CycleTime::RSI_12MS;
+  CycleTime cycle_time = CycleTime::RSI_4MS;
 
   enum class InstalledInterface {
     UNSPECIFIED = 0,

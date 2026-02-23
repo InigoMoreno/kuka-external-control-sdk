@@ -1,13 +1,14 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+﻿﻿<?xml version="1.0" encoding="utf-8"?>
 <!-- Do not change! The content of this file is generated. -->
 <!-- Generated with RSIVisual WorkVisual plugin. -->
-<!-- RobotSensorInterface 4.1 B567 -->
+<!-- RobotSensorInterface 5.0 B507 -->
 <RsiContext xsi:schemaLocation="RsiContext RsiContext.xsd" SchemaVersion="2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="RsiContext">
    <RsiObjects xmlns="RsiDriver">
       <RsiObject ObjTypeId="64" ObjType="Ethernet" ObjId="Ethernet_1">
          <Inputs>
             <Input InIdx="0" OutObjId="DigOut_1" OutIdx="0" />
             <Input InIdx="1" OutObjId="DigIn_1" OutIdx="0" />
+            <Input InIdx="2" OutObjId="DigIn_2" OutIdx="0" />
          </Inputs>
          <Parameters>
             <Parameter IsRuntime="false" Name="ConfigFile" ParamId="0" ParamValue="rsi_gpio_ethernet.xml" />
@@ -67,13 +68,13 @@
       </RsiObject>
       <RsiObject ObjTypeId="43" ObjType="DigOut" ObjId="DigOut_1">
          <Parameters>
-            <Parameter Name="Index" ParamId="0" ParamValue="1" />
+            <Parameter Name="Index" ParamId="0" ParamValue="2000" />
             <Parameter Name="DataType" ParamId="1" ParamValue="0" />
          </Parameters>
       </RsiObject>
       <RsiObject ObjTypeId="29" ObjType="DigIn" ObjId="DigIn_1">
          <Parameters>
-            <Parameter Name="Index" ParamId="0" ParamValue="1" />
+            <Parameter Name="Index" ParamId="0" ParamValue="2000" />
             <Parameter Name="DataType" ParamId="1" ParamValue="0" />
          </Parameters>
       </RsiObject>
@@ -82,13 +83,19 @@
             <Input InIdx="0" OutObjId="Ethernet_1" OutIdx="7" />
          </Inputs>
          <Parameters>
-            <Parameter Name="Index" ParamId="0" ParamValue="1" />
+            <Parameter Name="Index" ParamId="0" ParamValue="2000" />
+            <Parameter Name="DataType" ParamId="1" ParamValue="0" />
+         </Parameters>
+      </RsiObject>
+      <RsiObject ObjTypeId="29" ObjType="DigIn" ObjId="DigIn_2">
+         <Parameters>
+            <Parameter Name="Index" ParamId="0" ParamValue="2001" />
             <Parameter Name="DataType" ParamId="1" ParamValue="0" />
          </Parameters>
       </RsiObject>
    </RsiObjects>
    <BlueprintCollections SchemaVersion="2.0.0" xmlns="RsiBlueprint">
-      <BlueprintCollection Name="RSI" Version="2.0.3">
+      <BlueprintCollection Name="RSI" Version="2.1.3">
          <Subset Name="Editor">
             <Element Name="Comment" DisplayCategory="Comment">
                <Description>Tooltip_COMMENT</Description>
@@ -666,6 +673,22 @@
                   </Output>
                </Outputs>
             </Element>
+            <Element Name="Division" Id="100">
+               <Description>Tooltip_Division</Description>
+               <Inputs>
+                  <Input Name="Dividend" Index="0">
+                     <Description>Tooltip_Division_Dividend</Description>
+                  </Input>
+                  <Input Name="Divisor" Index="1">
+                     <Description>Tooltip_Division_Divisor</Description>
+                  </Input>
+               </Inputs>
+               <Outputs>
+                  <Output Name="Quotient" Index="0">
+                     <Description>Tooltip_Division_Quotient</Description>
+                  </Output>
+               </Outputs>
+            </Element>
             <Element Name="Equal" Id="7">
                <Description>Tooltip_EQUAL</Description>
                <Inputs>
@@ -1018,6 +1041,15 @@
                      <Description>Tooltip_TRAFO_USERFRAME_FraC</Description>
                   </DoubleParameter>
                </Parameters>
+            </Element>
+            <Element Name="SumUp" Id="101">
+               <Description>Tooltip_SUMUP</Description>
+               <Inputs>
+                  <Input Name="In1" Index="0" />
+               </Inputs>
+               <Outputs>
+                  <Output Name="Out1" Index="0" />
+               </Outputs>
             </Element>
          </Subset>
          <Subset Name="Motion Manipulation">
@@ -1917,8 +1949,11 @@
                         <Value>O10</Value>
                      </EnumValues>
                   </EnumParameter>
-                  <DoubleParameter Name="Cutoff" Index="3" CanBeSetAtRuntime="false" Min="0" Default="1">
-                     <Description>Tooltip_IIRFILTER_Cuttoff</Description>
+                  <DoubleParameter Name="Cutoff" Index="3" CanBeSetAtRuntime="false" Min="1E-06" Default="1">
+                     <Description>
+                        <Remarks>Remarks_IIRFILTER_Cutoff</Remarks>
+                        <Summary>Tooltip_IIRFILTER_Cuttoff</Summary>
+                     </Description>
                   </DoubleParameter>
                </Parameters>
             </Element>
@@ -2401,7 +2436,8 @@
       <Construct Name="Ethernet_1" BlueprintName="Ethernet" BlueprintCollection="RSI" Location="400,370">
          <Inputs>
             <Input Name="In1" SourceObject="DigOut_1" SourcePort="Out1" Points="176.08,389.5;184.08,389.5;192.08,389.5;192.08,389.5;366,389.5;382,389.5" />
-            <Input Name="In2" SourceObject="DigIn_1" SourcePort="Out1" Points="176.08,955.9;188.08,955.9;200.08,955.9;200.08,419.5;366,419.5;382,419.5" />
+            <Input Name="In2" SourceObject="DigIn_1" SourcePort="Out1" Points="176.08,505.5;188.08,505.5;200.08,505.5;200.08,419.5;366,419.5;382,419.5" />
+            <Input Name="In3" SourceObject="DigIn_2" SourcePort="Out1" Points="176.08,625.5;188.08,625.5;216.08,625.5;216.08,449.5;366,449.5;382,449.5" />
          </Inputs>
          <Parameters>
             <StringParameter Name="ConfigFile" Value="rsi_gpio_ethernet.xml" />
@@ -2410,14 +2446,14 @@
             <IntParameter Name="Precision" Value="4" />
          </Parameters>
       </Construct>
-      <Construct Name="AxisCorr_1" BlueprintName="AxisCorr" BlueprintCollection="RSI" Location="800,370">
+      <Construct Name="AxisCorr_1" BlueprintName="AxisCorr" BlueprintCollection="RSI" Location="804,468">
          <Inputs>
-            <Input Name="CorrA1" SourceObject="Ethernet_1" SourcePort="Out2" Points="578.516666666667,419.5;598.516666666667,419.5;618.516666666667,419.5;618.516666666667,389.5;766,389.5;782,389.5" />
-            <Input Name="CorrA2" SourceObject="Ethernet_1" SourcePort="Out3" Points="578.516666666667,449.5;606.516666666667,449.5;634.516666666667,449.5;634.516666666667,419.5;766,419.5;782,419.5" />
-            <Input Name="CorrA3" SourceObject="Ethernet_1" SourcePort="Out4" Points="578.516666666667,479.5;614.516666666667,479.5;650.516666666667,479.5;650.516666666667,449.5;766,449.5;782,449.5" />
-            <Input Name="CorrA4" SourceObject="Ethernet_1" SourcePort="Out5" Points="578.516666666667,509.5;622.516666666667,509.5;666.516666666667,509.5;666.516666666667,479.5;766,479.5;782,479.5" />
-            <Input Name="CorrA5" SourceObject="Ethernet_1" SourcePort="Out6" Points="578.516666666667,539.5;630.516666666667,539.5;682.516666666667,539.5;682.516666666667,509.5;766,509.5;782,509.5" />
-            <Input Name="CorrA6" SourceObject="Ethernet_1" SourcePort="Out7" Points="578.516666666667,569.5;638.516666666667,569.5;698.516666666667,569.5;698.516666666667,539.5;766,539.5;782,539.5" />
+            <Input Name="CorrA1" SourceObject="Ethernet_1" SourcePort="Out2" Points="578.516666666667,419.5;634.516666666667,419.5;690.516666666667,419.5;690.516666666667,487.5;770,487.5;786,487.5" />
+            <Input Name="CorrA2" SourceObject="Ethernet_1" SourcePort="Out3" Points="578.516666666667,449.5;626.516666666667,449.5;674.516666666667,449.5;674.516666666667,517.5;770,517.5;786,517.5" />
+            <Input Name="CorrA3" SourceObject="Ethernet_1" SourcePort="Out4" Points="578.516666666667,479.5;618.516666666667,479.5;658.516666666667,479.5;658.516666666667,547.5;770,547.5;786,547.5" />
+            <Input Name="CorrA4" SourceObject="Ethernet_1" SourcePort="Out5" Points="578.516666666667,509.5;610.516666666667,509.5;642.516666666667,509.5;642.516666666667,577.5;770,577.5;786,577.5" />
+            <Input Name="CorrA5" SourceObject="Ethernet_1" SourcePort="Out6" Points="578.516666666667,539.5;602.516666666667,539.5;626.516666666667,539.5;626.516666666667,607.5;770,607.5;786,607.5" />
+            <Input Name="CorrA6" SourceObject="Ethernet_1" SourcePort="Out7" Points="578.516666666667,569.5;594.516666666667,569.5;610.516666666667,569.5;610.516666666667,637.5;770,637.5;786,637.5" />
          </Inputs>
          <Parameters>
             <DoubleParameter Name="LowerLimA1" CanBeSetFromKrl="true" Value="-180" />
@@ -2434,9 +2470,9 @@
             <DoubleParameter Name="UpperLimA6" CanBeSetFromKrl="true" Value="180" />
          </Parameters>
       </Construct>
-      <Construct Name="Stop_1" BlueprintName="Stop" BlueprintCollection="RSI" Location="800,709.8">
+      <Construct Name="Stop_1" BlueprintName="Stop" BlueprintCollection="RSI" Location="804,354">
          <Inputs>
-            <Input Name="In1" SourceObject="Ethernet_1" SourcePort="Out1" Points="578.516666666667,389.5;642.516666666667,389.5;706.516666666667,389.5;706.516666666667,729.3;766,729.3;782,729.3" />
+            <Input Name="In1" SourceObject="Ethernet_1" SourcePort="Out1" Points="578.516666666667,389.5;590.516666666667,389.5;602.516666666667,389.5;602.516666666667,373.5;770,373.5;786,373.5" />
          </Inputs>
       </Construct>
       <Construct Name="AxisCorrMon_1" BlueprintName="AxisCorrMon" BlueprintCollection="RSI" Location="0,0">
@@ -2455,12 +2491,28 @@
             <DoubleParameter Name="MaxE6" CanBeSetFromKrl="true" Value="6" />
          </Parameters>
       </Construct>
-      <Construct Name="DigOut_1" BlueprintName="DigOut" BlueprintCollection="RSI" Location="0,370" />
-      <Construct Name="DigIn_1" BlueprintName="DigIn" BlueprintCollection="RSI" Location="0,936.4" />
+      <Construct Name="DigOut_1" BlueprintName="DigOut" BlueprintCollection="RSI" Location="0,370">
+         <Parameters>
+            <IntParameter Name="Index" Value="2000" />
+         </Parameters>
+      </Construct>
+      <Construct Name="DigIn_1" BlueprintName="DigIn" BlueprintCollection="RSI" Location="0,486">
+         <Parameters>
+            <IntParameter Name="Index" Value="2000" />
+         </Parameters>
+      </Construct>
       <Construct Name="Map2DigOut_1" BlueprintName="Map2DigOut" BlueprintCollection="RSI" Location="800,823.1">
          <Inputs>
             <Input Name="In1" SourceObject="Ethernet_1" SourcePort="Out8" Points="578.516666666667,599.5;586.516666666667,599.5;594.516666666667,599.5;594.516666666667,842.6;766,842.6;782,842.6" />
          </Inputs>
+         <Parameters>
+            <IntParameter Name="Index" Value="2000" />
+         </Parameters>
+      </Construct>
+      <Construct Name="DigIn_2" BlueprintName="DigIn" BlueprintCollection="RSI" Location="0,606">
+         <Parameters>
+            <IntParameter Name="Index" Value="2001" />
+         </Parameters>
       </Construct>
    </Constructs>
 </RsiContext>
