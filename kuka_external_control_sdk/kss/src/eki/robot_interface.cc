@@ -23,9 +23,9 @@ Robot::Robot(Configuration config)
 {}
 
 Status Robot::Setup() {
-  os::core::udp::communication::TCPClient::ErrorCode setup_ret = tcp_client_.Setup();
-  if (setup_ret != os::core::udp::communication::TCPClient::ErrorCode::kSuccess) {
-    return { ReturnCode::ERROR, ((std::string)"Setup failed with error code: " + std::to_string(static_cast<int>(setup_ret))).c_str() };
+  Status setup_ret = tcp_client_.Setup();
+  if (setup_ret.return_code != ReturnCode::OK) {
+    return setup_ret;
   }
 
   Status start_ret = tcp_client_.Start();
