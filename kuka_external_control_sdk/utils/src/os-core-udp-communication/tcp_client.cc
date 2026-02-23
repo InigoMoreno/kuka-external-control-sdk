@@ -39,29 +39,35 @@ TCPClient::TCPClient(size_t buffer_size,
   // TODO check whether we need to try to reconnect multiple times
 }
 
-TCPClient::ErrorCode TCPClient::Setup() {
+kuka::external::control::Status TCPClient::Setup() {
+  using namespace kuka::external::control;
+
   if (socket_->IsActive()) {
-    return TCPClient::ErrorCode::kAlreadyActive;
+    return { ReturnCode::ERROR, "TCP client already active" };
   }
   int result = socket_->Map(flags_);
   if (result < 0) {
-    return TCPClient::ErrorCode::kSocketError;
+    auto [err_code, err_no] = socket_->GetLastSocketError();
+    return { ReturnCode::ERROR, ((std::string)"Failed to create socket: " + std::strerror(err_no)).c_str() };
   }
   result = socket_->SetReuseAddress();
   if (result < 0) {
-    return TCPClient::ErrorCode::kSocketError;
+    auto [err_code, err_no] = socket_->GetLastSocketError();
+    return { ReturnCode::ERROR, ((std::string)"Failed to set socket reuse address: " + std::strerror(err_no)).c_str() };
   }
   if (local_addr_.has_value()) {
     result = socket_->Bind(*local_addr_);
     if (result < 0) {
-      return TCPClient::ErrorCode::kSocketError;
+      auto [err_code, err_no] = socket_->GetLastSocketError();
+      return { ReturnCode::ERROR, ((std::string)"Failed to bind to local address: " + std::strerror(err_no)).c_str() };
     }
   }
   result = socket_->Connect(remote_addr_);
   if (result < 0) {
-    return TCPClient::ErrorCode::kSocketError;
+    auto [err_code, err_no] = socket_->GetLastSocketError();
+    return { ReturnCode::ERROR, ((std::string)"Failed to connect to remote address: " + std::strerror(err_no)).c_str() };
   }
-  return TCPClient::ErrorCode::kSuccess;
+  return { ReturnCode::OK, "TCP client setup successful" };
 }
 
 bool TCPClient::Receive(unsigned char* recv_data, std::chrono::microseconds timeout) {

@@ -17,6 +17,7 @@
 
 #include "dissector.h"
 #include "socket.h"
+#include "kuka/external-control-sdk/common/status.h"
 
 namespace os::core::udp::communication {
 
@@ -36,7 +37,7 @@ class TCPClient : public Dissector {
             const std::optional<SocketAddress> &local_addr = std::nullopt);
   ~TCPClient() = default;
 
-  ErrorCode Setup();
+  kuka::external::control::Status Setup();
 
   int Send(unsigned char *buffer, size_t buffer_len) { return socket_->Send(buffer, buffer_len); }
   bool Receive(unsigned char *recv_data, std::chrono::microseconds timeout);
